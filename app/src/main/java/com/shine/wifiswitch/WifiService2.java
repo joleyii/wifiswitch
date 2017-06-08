@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +22,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.BackpressureStrategy;
@@ -51,6 +55,32 @@ public class WifiService2 extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("startServiceMy", "startServiceMy");
+        timer.schedule(task, 120000);
+    }
+
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                startServiceMy();
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+        @Override
+        public void run() {
+            // 需要做的事:发送消息
+            Message message = new Message();
+            message.what = 1;
+            handler.sendMessage(message);
+        }
+    };
+
+    private void startServiceMy() {
+        Log.d("startServiceMy", "startServiceMy");
         mWifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mWifiInfo = mWifiManager.getConnectionInfo();
 
@@ -83,7 +113,6 @@ public class WifiService2 extends Service {
         } else {
             Log.d("WifiService", "file not exits");
         }
-
     }
 
     int readSignTick = 60;
@@ -124,7 +153,7 @@ public class WifiService2 extends Service {
             if (lastStatus == 0) {
                 enablingNumber += 1;
                 if (enablingNumber == 3) {
-                       closeAndOpenWifi();
+                    closeAndOpenWifi();
                     enablingNumber = 0;
                 }
 //                Log.d("MyWifiStatus", "网卡正在关闭");

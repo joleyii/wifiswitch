@@ -30,6 +30,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--<activity android:name=".MainActivity_2">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <!--<service android:name=".WifiService" />-->
         <service android:name=".WifiService2" />
         <receiver android:name="com.shine.wifiswitch.BootCompletedReceiver">
