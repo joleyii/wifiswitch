@@ -56,7 +56,7 @@ public class WifiService2 extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("startServiceMy", "startServiceMy");
-        timer.schedule(task, 120000);
+        timer.schedule(task, 300000);
     }
 
     Handler handler = new Handler() {
