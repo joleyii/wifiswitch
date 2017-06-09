@@ -196,31 +196,35 @@ public class WifiService2 extends Service {
             Log.d("MyWifiStatus", "wifinoinfo");
         }
     }
-
-    int currentEnable;
-
+    
+    int checkEnableTime;
     public void checkNetEnable() {
         if (mWifiManager.getWifiState() == 0) {
-            currentEnable = 0;
-            Log.d("MyWifiStatus", "disabling");
+            checkEnableTime = 0;
+            Log.d("checkNetEnable", "disabling");
         } else if (mWifiManager.getWifiState() == 1) {
-            currentEnable = 0;
-            Log.d("MyWifiStatus", "closed");
+            checkEnableTime = 0;
+            Log.d("checkNetEnable", "closed");
         } else if (mWifiManager.getWifiState() == 2) {
-            currentEnable = 0;
-            Log.d("MyWifiStatus", "opening");
+            checkEnableTime = 0;
+            Log.d("checkNetEnable", "opening");
         } else if (mWifiManager.getWifiState() == 3) {
             //判断如果没有设别连接 三次之后关闭在重新打开
             List<ScanResult> scanResults = mWifiManager.getScanResults();//搜索到的设备列表
             Log.d("scanResults", scanResults.size() + "scanResultsscanResults");
             if (scanResults.size() == 0) {
                 Log.d("scanResults", "scanResultsscanResults");
-                closeAndOpenWifi();
-            }
-            Log.d("MyWifiStatus", "opened");
+                checkEnableTime += 1;
+                if (checkEnableTime == 3) {
+                    closeAndOpenWifi();
+                }
+            } else {
+                checkEnableTime = 0;
+            } 
+            Log.d("checkNetEnable", "opened");
         } else {
-            currentEnable = 0;
-            Log.d("MyWifiStatus", "wifinoinfo");
+            checkEnableTime = 0;
+            Log.d("checkNetEnable", "wifinoinfo");
         }
     }
 
@@ -415,4 +419,5 @@ public class WifiService2 extends Service {
         }
         return isSuccess;
     }
+
 }
